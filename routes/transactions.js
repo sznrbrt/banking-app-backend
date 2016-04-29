@@ -21,5 +21,16 @@ router.route('/')
     })
   })
 
+router.route('/:id')
+  .delete((req, res) => {
+    Transaction.delete(req.params.id, (err) => {
+      res.status(err ? 400 : 200).send(err || 'You have deleted the transaction!');
+    })
+  })
+  .put((req, res) => {
+    Transaction.edit(req.params.id, req.body, (err) => {
+      res.status(err ? 400 : 200).send(err || 'You have edited the transaction!');
+    })
+  })
 
 module.exports = router;

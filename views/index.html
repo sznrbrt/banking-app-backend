@@ -96,6 +96,7 @@
         <div class="col-xs-12">
           <table class="table transactions">
             <thead>
+              <th ng-click="sortBy('id')">#</th>
               <th ng-click="sortBy('date')">Date</th>
               <th ng-click="sortBy('description')">Description</th>
               <th ng-click="sortBy('dr')">Dr</th>
@@ -106,6 +107,7 @@
             </thead>
             <tbody>
               <tr ng-repeat="transaction in transactions | filter:searchFilter | orderBy:sortOrder track by $index ">
+                <td>{{ transaction.id }}</td>
                 <td>{{ transaction.date  | date:'yyyy-MM-dd' }}</td>
                 <td>{{ transaction.description }}</td>
                 <td>{{ transaction.dr | currency:"USD$":0}}</td>

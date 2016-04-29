@@ -10,4 +10,8 @@ app.service('Transaction', function($http) {
   this.create = (transaction) => {
     return $http.post('/api/transactions', transaction);
   }
+
+  this.remove = (id) => {
+    return $http.delete(`/api/transactions/${id}`);
+  }
 })

@@ -6,7 +6,6 @@ app.controller('mainCtrl', function($scope, Transaction) {
 
   Transaction.getAll()
     .then((res) => {
-      console.log('res:', res);
       $scope.transactions = res.data;
     })
     .catch((err) => {
@@ -20,7 +19,6 @@ app.controller('mainCtrl', function($scope, Transaction) {
     $scope.entryValue = undefined;
     $scope.entry = undefined;
   }
-  // getBalance();
 
   $scope.addEntry = () => {
     var newTransactionForm = $scope.newTransactionForm;
@@ -39,46 +37,31 @@ app.controller('mainCtrl', function($scope, Transaction) {
 
       Transaction.create(newTransaction)
       .then((res) => {
-        console.log(res.data);
-        var transaction = res.data;
+        console.log(res);
+        var newTransactionID = res.data.insertId;
+        newTransaction.id = newTransactionID;
         $scope.transactions.push(newTransaction);
+        $scope.newTransactionForm = {};
       })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  // $scope.addEntry = () => {
-  //   var newTransaction = {
-  //     "date": $scope.date,
-  //     "description": $scope.description,
-  //     "note": $scope.note,
-  //     "dr": 0,
-  //     "cr": 0,
-  //     "entry": $scope.entry
-  //   };
-  //   if(!newTransaction.date  || !newTransaction.description || !newTransaction.entry ) return;
-  //   if($scope.entry === 'Credit'){
-  //     newTransaction.cr = $scope.entryValue;
-  //     if(!newTransaction.cr) return;
-  //     newTransaction.dr = 0;
-  //     $scope.transactions.push(newTransaction);
-  //     var newTransaction = {};
-  //   } else {
-  //     newTransaction.cr = 0;
-  //     newTransaction.dr = $scope.entryValue;
-  //     if(!newTransaction.dr) return;
-  //     $scope.transactions.push(newTransaction);
-  //     var newTransaction = {};
-  //   }
-  //   $scope.clearInput();
-  //   // getBalance();
-  // }
-
-
-  // $scope.deleteEntry = (transaction) => {
-  //   var index = $scope.transactions.indexOf(transaction);
-  //   $scope.transactions.splice(index, 1);
-  //
-  //   // getBalance();
-  // };
+  $scope.deleteEntry = (transaction) => {
+    var index = $scope.transactions.indexOf(transaction);
+    var id = transaction.id
+    console.log(index);
+    console.log(id);
+    Transaction.remove(id)
+    .then(() => {
+      console.log(index);
+      $scope.transactions.splice(index, 1);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  }
 
   // $scope.openEditEntry = (transaction) => {
   //   $('.modal').modal('show');

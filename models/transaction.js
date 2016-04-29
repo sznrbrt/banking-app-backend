@@ -35,5 +35,22 @@ exports.create = function(transaction, callback) {
                       '${newTransaction.entry}',
                       '${newTransaction.dr}',
                       '${newTransaction.cr}')`,
-              callback(null, newTransaction));
+              callback);
+}
+
+exports.delete = function(id, callback) {
+  if(!id) return callback('Error! You must define an id!');
+  db.query(`DELETE FROM transactions WHERE id = '${id}';`, callback(null))
+}
+
+exports.edit = function(id, modTransaction, callback) {
+  if(!id || !modTransaction) return callback('Error! You must define an id!');
+  db.query(`UPDATE transactions
+                SET date = '${modTransaction.date}',
+                    description = '${modTransaction.description}',
+                    note = '${modTransaction.note}',
+                    entry = '${modTransaction.entry}',
+                    dr = '${modTransaction.dr}',
+                    cr = '${modTransaction.cr}'
+                WHERE id = '${id}';`, callback(null));
 }
