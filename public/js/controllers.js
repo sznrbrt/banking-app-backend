@@ -7,10 +7,12 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
   Transaction.getAll()
     .then((res) => {
       $scope.transactions = res.data;
+      getBalance();
     })
     .catch((err) => {
       console.error('err:', err);
     });
+
 
   $scope.clearInput = () => {
     $scope.note = "";
@@ -37,11 +39,11 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
 
       Transaction.create(newTransaction)
       .then((res) => {
-        console.log(res);
         var newTransactionID = res.data.insertId;
         newTransaction.id = newTransactionID;
         $scope.transactions.push(newTransaction);
         $scope.newTransactionForm = {};
+        getBalance();
       })
       .catch(err => {
         console.error(err);
@@ -51,12 +53,10 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
   $scope.deleteEntry = (transaction) => {
     var index = $scope.transactions.indexOf(transaction);
     var id = transaction.id
-    console.log(index);
-    console.log(id);
     Transaction.remove(id)
     .then(() => {
-      console.log(index);
       $scope.transactions.splice(index, 1);
+      getBalance();
     })
     .catch(err => {
       console.error(err);
@@ -75,46 +75,19 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
     });
     modalInstance.result.then(function(editedtransaction){
       var index = $scope.transactions.indexOf(transaction);
-      console.log('initalized');
-      $scope.transactions[index] = editedtransaction;
+      Transaction.edit(transaction.id, editedtransaction)
+      .then(() => {
+        $scope.transactions.splice(index, 1);
+        $scope.transactions[index] = editedtransaction;
+        getBalance();
+      })
+      .catch(err => {
+        console.error(err);
+      });
     }, function(){
       console.log('failure!');
     })
   };
-
-  // $scope.openEditEntry = (transaction) => {
-  //   $('.modal').modal('show');
-  //
-  //   var index = $scope.transactions.indexOf(transaction);
-  //   var underEdit = $scope.transactions[index];
-  //
-  //   $scope.modalDescription = underEdit.description;
-  //   $scope.modalDate = underEdit.date;
-  //   $scope.modalEntry = underEdit.entry;
-  //   $scope.modalEntryValue = underEdit.cr || underEdit.dr;
-  //   $scope.modalNote = underEdit.note;
-  //   $scope.underEditIndex = index;
-  // };
-  //
-  // $scope.editEntry = () => {
-  //   var index = $scope.underEditIndex;
-  //   var edited = {};
-  //   edited.description = $scope.modalDescription;
-  //   edited.date = $scope.modalDate;
-  //   edited.entry = $scope.modalEntry;
-  //   if(edited.entry === 'Debit') {
-  //     edited.dr = $scope.modalEntryValue;
-  //     edited.cr = 0;
-  //   }
-  //   if(edited.entry === 'Credit') {
-  //     edited.cr = $scope.modalEntryValue;
-  //     edited.dr = 0;
-  //   }
-  //   edited.note = $scope.modalNote;
-  //   $scope.transactions[index] = edited;
-  //   $('.modal').modal('hide');
-  //   // getBalance();
-  // };
 
   $scope.sortBy = (order) => {
     if($scope.sortOrder === order) {
@@ -124,15 +97,15 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
     }
   };
 
-  // function getBalance() {
-  //   $scope.totalDebit = $scope.transactions.reduce(function(acc, transaction){
-  //     return acc + transaction.dr;
-  //   }, 0);
-  //   $scope.totalCredit = $scope.transactions.reduce(function(acc, transaction){
-  //     return acc + transaction.cr;
-  //   }, 0);
-  //   $scope.totalBalance = $scope.totalCredit - $scope.totalDebit;
-  // }
+  function getBalance() {
+    $scope.totalDebit = $scope.transactions.reduce(function(acc, transaction){
+      return acc + transaction.dr;
+    }, 0);
+    $scope.totalCredit = $scope.transactions.reduce(function(acc, transaction){
+      return acc + transaction.cr;
+    }, 0);
+    $scope.totalBalance = $scope.totalCredit - $scope.totalDebit;
+  }
 
 });
 
@@ -149,8 +122,4 @@ app.controller('editModalCtrl', function($scope, $uibModalInstance, transaction,
     console.log('cancel');
     $uibModalInstance.dismiss();
   };
-
-  $scope.changeTo = function(input) {
-    console.log(input);
-  }
 })

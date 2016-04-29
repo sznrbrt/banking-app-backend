@@ -14,4 +14,8 @@ app.service('Transaction', function($http) {
   this.remove = (id) => {
     return $http.delete(`/api/transactions/${id}`);
   }
+
+  this.edit = (id, modTransaction) => {
+    return $http.put(`/api/transactions/${id}`, modTransaction);
+  }
 })
