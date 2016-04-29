@@ -15,11 +15,7 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
 
 
   $scope.clearInput = () => {
-    $scope.note = "";
-    $scope.description = "";
-    $scope.date = undefined;
-    $scope.entryValue = undefined;
-    $scope.entry = undefined;
+    $scope.newTransactionForm = {};
   }
 
   $scope.addEntry = () => {
@@ -77,7 +73,6 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
       var index = $scope.transactions.indexOf(transaction);
       Transaction.edit(transaction.id, editedtransaction)
       .then(() => {
-        $scope.transactions.splice(index, 1);
         $scope.transactions[index] = editedtransaction;
         getBalance();
       })

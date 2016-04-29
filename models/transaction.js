@@ -1,6 +1,7 @@
 'use strict';
 
 var db = require('../config/db');
+var moment = require('moment');
 
 db.query(`CREATE TABLE IF NOT EXISTS transactions(
             date TEXT,
@@ -9,6 +10,7 @@ db.query(`CREATE TABLE IF NOT EXISTS transactions(
             entry TEXT,
             dr INTEGER,
             cr INTEGER,
+            timestamp TEXT,
             id int PRIMARY KEY AUTO_INCREMENT)`);
 
 exports.getAll = function(callback) {
@@ -25,16 +27,18 @@ exports.create = function(transaction, callback) {
       entry: transaction.entry,
       dr: transaction.dr,
       cr: transaction.cr,
-      entryvalue: transaction.entryvalue
+      entryvalue: transaction.entryvalue,
+      timestamp: moment()
   };
 
-  db.query(`INSERT INTO transactions (date, description, note, entry, dr, cr)
+  db.query(`INSERT INTO transactions (date, description, note, entry, dr, cr, timestamp)
               VALUES ('${newTransaction.date}',
                       '${newTransaction.description}',
                       '${newTransaction.note}',
                       '${newTransaction.entry}',
                       '${newTransaction.dr}',
-                      '${newTransaction.cr}')`,
+                      '${newTransaction.cr}',
+                      '${newTransaction.timestamp}')`,
               callback);
 }
 
