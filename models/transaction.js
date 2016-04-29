@@ -9,7 +9,6 @@ db.query(`CREATE TABLE IF NOT EXISTS transactions(
             entry TEXT,
             dr INTEGER,
             cr INTEGER,
-            entryvalue INTEGER,
             id int PRIMARY KEY AUTO_INCREMENT)`);
 
 exports.getAll = function(callback) {
@@ -21,21 +20,20 @@ exports.create = function(transaction, callback) {
 
   var newTransaction = {
       date: transaction.date,
-      desc: transaction.desc,
-      note: transaction.note,
+      description: transaction.description,
+      note: transaction.note || "-",
       entry: transaction.entry,
       dr: transaction.dr,
       cr: transaction.cr,
       entryvalue: transaction.entryvalue
   };
 
-  db.query(`INSERT INTO transactions (date, description, note, entry, dr, cr, entryvalue)
+  db.query(`INSERT INTO transactions (date, description, note, entry, dr, cr)
               VALUES ('${newTransaction.date}',
-                      '${newTransaction.desc}',
+                      '${newTransaction.description}',
                       '${newTransaction.note}',
                       '${newTransaction.entry}',
                       '${newTransaction.dr}',
-                      '${newTransaction.cr}',
-                      '${newTransaction.entryvalue}')`,
+                      '${newTransaction.cr}')`,
               callback(null, newTransaction));
 }

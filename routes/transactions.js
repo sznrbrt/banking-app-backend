@@ -17,7 +17,7 @@ router.route('/')
     var todo = req.body;
     Transaction.create(todo, (err, transaction) => {
       if(err) return res.status(400).send(err);
-      res.send('You have added a new transaction!');
+      res.send(transaction);
     })
   })
 
