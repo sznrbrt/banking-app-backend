@@ -2,7 +2,7 @@
 
 var app = angular.module('bankingApp');
 
-app.controller('mainCtrl', function($scope, Transaction) {
+app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
 
   Transaction.getAll()
     .then((res) => {
@@ -63,6 +63,25 @@ app.controller('mainCtrl', function($scope, Transaction) {
     });
   }
 
+  $scope.selectTransaction = (transaction) => {
+    var modalInstance = $uibModal.open({
+      controller: 'editModalCtrl',
+      templateUrl: 'editModal.html',
+      resolve: {
+        transaction: function() {
+          return transaction;
+        }
+      }
+    });
+    modalInstance.result.then(function(editedtransaction){
+      var index = $scope.transactions.indexOf(transaction);
+      console.log('initalized');
+      $scope.transactions[index] = editedtransaction;
+    }, function(){
+      console.log('failure!');
+    })
+  };
+
   // $scope.openEditEntry = (transaction) => {
   //   $('.modal').modal('show');
   //
@@ -116,3 +135,22 @@ app.controller('mainCtrl', function($scope, Transaction) {
   // }
 
 });
+
+app.controller('editModalCtrl', function($scope, $uibModalInstance, transaction, Transaction) {
+  $scope.editedtransaction = angular.copy(transaction);
+
+  $scope.ok = function() {
+    console.log('ok')
+    if($scope.editedtransaction.entry === 'Credit') $scope.editedtransaction.dr = 0;
+    else $scope.editedtransaction.cr = 0;
+    $uibModalInstance.close($scope.editedtransaction);
+  };
+  $scope.cancel = function() {
+    console.log('cancel');
+    $uibModalInstance.dismiss();
+  };
+
+  $scope.changeTo = function(input) {
+    console.log(input);
+  }
+})

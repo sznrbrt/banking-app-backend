@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h3 class="modal-title">Edit Contact:</h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <label>Description:</label>
+        <input type="text" class="form-control" placeholder="Name" ng-model="editedtransaction.description">
+    </div>
+    <div class="form-group">
+        <label>Date:</label>
+        <input type="date" class="form-control" ng-model="editedtransaction.date">
+    </div>
+    <div class="form-group">
+        <label>Debit/Credit</label>
+        <select class="form-control" ng-model="editedtransaction.entry">
+            <option>Debit</option>
+            <option>Credit</option>
+        </select>
+    </div>
+    <div class="form-group" ng-show="editedtransaction.entry === 'Credit'">
+        <label>Amount(Cr):</label>
+        <input type="number" class="form-control" ng-model="editedtransaction.cr">
+    </div>
+    <div class="form-group" ng-show="editedtransaction.entry === 'Debit'">
+        <label>Amount(Dr):</label>
+        <input type="number" class="form-control" ng-model="editedtransaction.dr">
+    </div>
+    <div class="form-group">
+        <label>Note:</label>
+        <input type="text" class="form-control" placeholder="Enter notes" ng-model="editedtransaction.note">
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Edit</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
