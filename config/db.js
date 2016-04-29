@@ -3,7 +3,7 @@
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  "host"     : 'localhost',
+  "host"     : process.env.JAWSDB_URL || "localhost",
   "user"     : 'root',
   "password" : 'qn4nzpmw',
   "database" : 'bankingappdb'
