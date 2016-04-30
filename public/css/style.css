@@ -114,3 +114,11 @@ tr {
 #value {
   width: 450px;
 }
+
+.has-error {
+    color: red;
+    background-color: yellow;
+}
+.orange {
+    color: orange;
+}

@@ -21,16 +21,21 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
   $scope.addEntry = () => {
     var newTransactionForm = $scope.newTransactionForm;
     var newTransaction = {};
+
+      if(!newTransaction.date) return;
+      if(!newTransaction.description) return;
+      if(!newTransaction.entry) return;
+      if(!newTransaction.entryValue) return;
       newTransaction.date = newTransactionForm.date;
       newTransaction.description = newTransactionForm.description;
       newTransaction.note = newTransactionForm.note;
       newTransaction.entry = newTransactionForm.entry;
       if(newTransactionForm.entry === 'Credit'){
-        newTransaction.cr = newTransactionForm.entryValue;
+        newTransaction.cr = Math.abs(newTransactionForm.entryValue);
         newTransaction.dr = 0;
       } else {
         newTransaction.cr = 0;
-        newTransaction.dr = newTransactionForm.entryValue;
+        newTransaction.dr = Math.abs(newTransactionForm.entryValue);
       };
 
       Transaction.create(newTransaction)
