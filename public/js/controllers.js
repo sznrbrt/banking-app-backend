@@ -111,7 +111,8 @@ app.controller('mainCtrl', function($scope, Transaction, $uibModal) {
 
 app.controller('editModalCtrl', function($scope, $uibModalInstance, transaction, Transaction) {
   $scope.editedtransaction = angular.copy(transaction);
-
+  $scope.editedtransaction.cr = Math.abs($scope.editedtransaction.cr);
+  $scope.editedtransaction.dr = Math.abs($scope.editedtransaction.dr);
   $scope.ok = function() {
     console.log('ok')
     if($scope.editedtransaction.entry === 'Credit') $scope.editedtransaction.dr = 0;
